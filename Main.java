@@ -9,6 +9,7 @@ public class Main extends JFrame {
     JList<Task> list = new JList<>(model);
     JTextField titleField = new JTextField();
     JLabel status = new JLabel(" ");
+    JComboBox<String> filter = new JComboBox<>(new String[]{"All", "Pending", "Done"});
 
     Main() {
         super("Todo App");
@@ -17,6 +18,7 @@ public class Main extends JFrame {
         JPanel top = new JPanel(new BorderLayout(5, 5));
         top.add(titleField, BorderLayout.CENTER);
         top.add(addButton, BorderLayout.EAST);
+        top.add(filter, BorderLayout.WEST);
 
         list.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         list.setCellRenderer(new DefaultListCellRenderer() {
@@ -51,6 +53,7 @@ public class Main extends JFrame {
         toggleButton.addActionListener(e -> toggle());
         deleteButton.addActionListener(e -> delete());
         clearButton.addActionListener(e -> show(todo.clearDone()));
+        filter.addActionListener(e -> refresh());
 
         refresh();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -84,8 +87,12 @@ public class Main extends JFrame {
     void refresh() {
         int selected = list.getSelectedIndex();
         model.clear();
-        for (Task t : todo.tasks) model.addElement(t);
-        if (selected >= 0 && selected < model.size()) list.setSelectedIndex(selected);
+        String choice = (String) filter.getSelectedItem();
+        for (Task t : todo.tasks) {
+            if (choice.equals("Pending") && t.done) continue;
+            if (choice.equals("Done") && !t.done) continue;
+            model.addElement(t);
+        }        if (selected >= 0 && selected < model.size()) list.setSelectedIndex(selected);
     }
 
     public static void main(String[] args) {
