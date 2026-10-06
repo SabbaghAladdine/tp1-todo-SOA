@@ -20,9 +20,9 @@ public class Main extends JFrame {
 
         list.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         list.setCellRenderer(new DefaultListCellRenderer() {
-            public Component getListCellRendererComponent(JList<?> l, Object value, int index,
-                                                          boolean selected, boolean focus) {
-                super.getListCellRendererComponent(l, value, index, selected, focus);
+            public Component getListCellRendererComponent(JList<?> jlist, Object value,
+                                                          int index, boolean selected, boolean focus) {
+                super.getListCellRendererComponent(jlist, value, index, selected, focus);
                 if (((Task) value).done && !selected) setForeground(Color.GRAY);
                 return this;
             }
@@ -30,9 +30,11 @@ public class Main extends JFrame {
 
         JButton toggleButton = new JButton("Done / Undo");
         JButton deleteButton = new JButton("Delete");
+        JButton clearButton = new JButton("Clear completed");
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttons.add(toggleButton);
         buttons.add(deleteButton);
+        buttons.add(clearButton);
         JPanel bottom = new JPanel(new BorderLayout());
         bottom.add(buttons, BorderLayout.CENTER);
         bottom.add(status, BorderLayout.SOUTH);
@@ -48,6 +50,7 @@ public class Main extends JFrame {
         titleField.addActionListener(e -> add());
         toggleButton.addActionListener(e -> toggle());
         deleteButton.addActionListener(e -> delete());
+        clearButton.addActionListener(e -> show(todo.clearDone()));
 
         refresh();
         setDefaultCloseOperation(EXIT_ON_CLOSE);

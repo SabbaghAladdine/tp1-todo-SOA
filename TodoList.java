@@ -8,7 +8,6 @@ public class TodoList implements Serializable {
     List<Task> tasks = new ArrayList<>();
     int nextId = 1;
 
-    // ---------- save / load (one local file) ----------
     static TodoList load() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE))) {
             return (TodoList) in.readObject();
@@ -25,7 +24,6 @@ public class TodoList implements Serializable {
         }
     }
 
-    // ---------- actions ----------
     String add(String title) {
         if (title.isEmpty()) return "A title is required.";
         for (Task t : tasks)
@@ -45,5 +43,11 @@ public class TodoList implements Serializable {
         tasks.remove(t);
         save();
         return "Task deleted.";
+    }
+    String clearDone() {
+        int before = tasks.size();
+        tasks.removeIf(t -> t.done);
+        save();
+        return (before - tasks.size()) + " completed task(s) removed.";
     }
 }
